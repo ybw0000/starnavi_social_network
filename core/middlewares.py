@@ -16,7 +16,7 @@ class UpdateLastRequestMiddleware:
 
         if request.user.is_authenticated and 'api' in request.path:
             request.user.last_request = now()
-            request.user.save()
+            request.user.save(update_fields=['last_request'])
 
         return response
 
@@ -39,7 +39,7 @@ class RequestsLoggingMiddleware:
     def __call__(self, request):
         request_id = uuid.uuid4()
         logger.info(msg={
-            'message': f'Internal request to {request.path}.',
+            'message': f'Internal {request.method} request to {request.path}.',
             'json': self.__loads_data(request.body.decode()),
             'request_id': request_id,
         })
