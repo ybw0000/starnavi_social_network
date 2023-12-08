@@ -1,0 +1,39 @@
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - postgres
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - postgres
+
+volumes:
+  pg_data:
+
+networks:
+  postgres:
+    driver: bridge
