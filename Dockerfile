@@ -29,6 +29,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY core ./app/core
 COPY user ./app/user
+COPY posts ./app/posts
 COPY manage.py ./app/manage.py
 COPY gunicorn.conf.py ./app/gunicorn.conf.py
 COPY entrypoint.sh ./app/entrypoint.sh
