@@ -1,10 +1,13 @@
 # StarNavi social network
 
 ### installation to local
+
 1. poetry install && poetry shell
 2. Set .env vars (Example in .env.sample)
 3. run by `python manage.py runserver` or `sh entrypoint.sh`
+
 ### OR docker-compose
+
 1. `docker compose build`
 2. `docker compose up -d`
 
@@ -46,3 +49,24 @@ Current test coverage
 | user/views.py                                            | 56     | 2      | 96%   |
 | -------------------------------------------------------- | ------ | ------ | ----- |
 | TOTAL                                                    | 605    | 10     | 98%   |
+
+# AUTOMATED BOT
+
+1. accessible only from local machine
+2. before start u need to place .env file in directory 'automated_bot'
+3. .env.sample is the example of your .env
+4. to run bot u need to switch to automated_bot dir `cd automated_bot`
+5. after all upper points u can run by `python run.py` or if u use Mac with Apple Silicone CPU u can run
+   by `arch --arm64 python run.py`
+
+## ATTENTION
+
+### Docker web server was tested on config with 8CPUS and 4GB memory
+
+#### stable .env setup for this Docker config is
+
+```dotenv
+MAX_USERS=50
+MAX_POSTS_PER_USERS=25
+MAX_LIKES_PER_USER=50
+```

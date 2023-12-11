@@ -14,11 +14,7 @@ class ELKJsonFormatter(jsonlogger.JsonFormatter):
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    'formatters': {
-        'json': {
-            '()': 'core.logging.ELKJsonFormatter'
-        }
-    },
+    'formatters': {'json': {'()': 'core.logging.ELKJsonFormatter'}},
     "handlers": {
         "console": {
             'class': 'logging.StreamHandler',

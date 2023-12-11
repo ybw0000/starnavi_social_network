@@ -8,6 +8,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -27,7 +28,28 @@ class CreateListPostView(CreateAPIView, ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
+
+    @swagger_auto_schema(
+        operation_description='Get list of posts',
+        tags=['posts'],
+        security=[],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_description='Create a post',
+        tags=['posts'],
+        security=[{'Bearer': []}],
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -36,8 +58,14 @@ class CreateListPostView(CreateAPIView, ListAPIView):
 class RetrievePostView(RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        tags=['posts'],
+        security=[],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class LikePostView(APIView):
@@ -54,7 +82,7 @@ class LikePostView(APIView):
         }
     )
     def patch(self, request, *args, **kwargs):
-        post = get_object_or_404(Post.objects.filter(author=request.user), pk=kwargs['pk'])
+        post = get_object_or_404(Post.objects.all(), pk=kwargs['pk'])
         user = request.user
 
         existing_like = Like.objects.filter(post=post, user=user).first()
@@ -73,19 +101,9 @@ class AnalyticsView(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             Parameter(
-                'date_from',
-                IN_QUERY,
-                description='Start date for analytics',
-                type=TYPE_STRING,
-                format=FORMAT_DATE
+                'date_from', IN_QUERY, description='Start date for analytics', type=TYPE_STRING, format=FORMAT_DATE
             ),
-            Parameter(
-                'date_to',
-                IN_QUERY,
-                description='End date for analytics',
-                type=TYPE_STRING,
-                format=FORMAT_DATE
-            )
+            Parameter('date_to', IN_QUERY, description='End date for analytics', type=TYPE_STRING, format=FORMAT_DATE),
         ]
     )
     def get(self, request: Request, *args, **kwargs):

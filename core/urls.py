@@ -31,13 +31,15 @@ doc_view = get_schema_view(
         contact=openapi.Contact(email="faquedust@gmail.com"),
     ),
     public=True,
-    permission_classes=[permissions.AllowAny, ],
+    permission_classes=[
+        permissions.AllowAny,
+    ],
 )
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('api/v1/', include('user.urls')),
-                  path('api/v1/', include('posts.urls')),
-                  path('swagger/', doc_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
-                  path('redoc/', doc_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('admin/', admin.site.urls),
+    path('api/v1/', include('user.urls')),
+    path('api/v1/', include('posts.urls')),
+    path('swagger/', doc_view.with_ui('swagger', cache_timeout=0), name='schema-swagger'),
+    path('redoc/', doc_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

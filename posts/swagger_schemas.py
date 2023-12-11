@@ -10,7 +10,7 @@ liked_response_schema = Schema(
             description='Liked.',
             default='Liked.',
         )
-    }
+    },
 )
 unliked_response_schema = Schema(
     type=TYPE_OBJECT,
@@ -20,7 +20,7 @@ unliked_response_schema = Schema(
             description='Unliked.',
             default='Unliked.',
         )
-    }
+    },
 )
 not_found_response_schema = Schema(
     type=TYPE_OBJECT,
@@ -30,5 +30,5 @@ not_found_response_schema = Schema(
             description='Not found.',
             default='Not found.',
         )
-    }
+    },
 )

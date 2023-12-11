@@ -29,9 +29,7 @@ class Like(models.Model):
 
         if date_from and date_to:
             if date_from > date_to:
-                filter_condition &= (
-                        Q(created_at__gte=date_from) | Q(created_at__lte=date_to)
-                )
+                filter_condition &= Q(created_at__gte=date_from) | Q(created_at__lte=date_to)
             else:
                 filter_condition &= Q(created_at__range=(date_from, date_to))
         elif date_from:

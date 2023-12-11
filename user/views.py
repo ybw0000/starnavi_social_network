@@ -24,7 +24,11 @@ class CreateUserView(CreateAPIView):
     serializer_class = CreateUserSerializer
     queryset = User.objects.all()
 
-    @swagger_auto_schema(responses={status.HTTP_201_CREATED: TokenObtainPairResponseSerializer()})
+    @swagger_auto_schema(
+        responses={status.HTTP_201_CREATED: TokenObtainPairResponseSerializer()},
+        tags=['user'],
+        security=[],
+    )
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
@@ -43,7 +47,9 @@ class DecoratedTokenObtainPairView(TokenObtainPairView):
     @swagger_auto_schema(
         responses={
             status.HTTP_200_OK: TokenObtainPairResponseSerializer(),
-        }
+        },
+        tags=['user'],
+        security=[],
     )
     def post(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -63,7 +69,9 @@ class DecoratedTokenRefreshView(TokenRefreshView):
     @swagger_auto_schema(
         responses={
             status.HTTP_200_OK: TokenRefreshResponseSerializer(),
-        }
+        },
+        tags=['user'],
+        security=[],
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
