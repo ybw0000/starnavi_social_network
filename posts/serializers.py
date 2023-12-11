@@ -11,7 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('text', 'author')
+        fields = ('id', 'text', 'author')
 
 
 class AnalyticsQueryParamsSerializer(serializers.Serializer):
@@ -26,5 +26,5 @@ class AnalyticsQueryParamsSerializer(serializers.Serializer):
             data['date_from'] = now().date()
             data['date_to'] = (now() + timedelta(days=1)).date()  # because it compares time also in DB
         elif date_from == date_to:
-            data['date_to'] = (date_to + timedelta(days=1))  # because it compares time also in DB
+            data['date_to'] = date_to + timedelta(days=1)  # because it compares time also in DB
         return data

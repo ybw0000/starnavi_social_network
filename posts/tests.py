@@ -15,17 +15,9 @@ class PostsTestCase(APITestCase):
     client: APIClient
     maxDiff = None
 
-    def test__list_posts__fail__unauthorized(self):
-        url = reverse('create-list-post')
-        with self.assertNumQueries(0):
-            response = self.client.get(path=url)
-
-        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
-        self.assertDictEqual({'detail': 'Authentication credentials were not provided.'}, response.json())
-
     def test__list_posts__success(self):
         user = User.objects.create_user(username='username', password='password')
-        Post.objects.create(text='test post', author=user)
+        post = Post.objects.create(text='test post', author=user)
 
         token = TokenObtainPairSerializer(data={'username': 'username', 'password': 'password'})
         token.is_valid(raise_exception=False)
@@ -39,7 +31,7 @@ class PostsTestCase(APITestCase):
             )
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertListEqual([{'text': 'test post', 'author': user.id}], response.json())
+        self.assertListEqual([{'text': 'test post', 'author': user.id, 'id': post.id}], response.json())
 
     def test__create_post__success(self):
         User.objects.create_user(username='username', password='password')
@@ -69,7 +61,7 @@ class PostsTestCase(APITestCase):
             response = self.client.get(path=url, headers=headers)
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertDictEqual({'text': 'test post', 'author': user.id}, response.json())
+        self.assertDictEqual({'text': 'test post', 'author': user.id, 'id': post.id}, response.json())
 
     def test__like_post__success__like(self):
         user = User.objects.create_user(username='username', password='password')

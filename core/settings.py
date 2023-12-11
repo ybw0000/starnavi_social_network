@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 
 from core.logging import LOGGING
 
-load_dotenv()
+load_dotenv(dotenv_path='.env')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-or8(-8m8=cb_-l93)iv!e+k56^x_xpcu9yj5dc1r(0@10ym_zm')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+if os.environ.get('DEBUG', 'false').lower() == 'true':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = list(os.environ.get('ALLOWED_HOSTS', '*').split(','))
 
@@ -38,7 +41,6 @@ ALLOWED_HOSTS = list(os.environ.get('ALLOWED_HOSTS', '*').split(','))
 INSTALLED_APPS = [
     # must be loaded faster
     'whitenoise.runserver_nostatic',
-
     # default django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,12 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # third party packages
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
-
     # own apps
     'user',
     'posts',
@@ -63,10 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     # third-party
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     # own
     'core.middlewares.UpdateLastRequestMiddleware',
     'core.middlewares.RequestsLoggingMiddleware',
@@ -155,9 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -170,7 +166,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
     'ROTATE_REFRESH_TOKENS': True,
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('ACCESS_TOKEN_LIFETIME', 5)))
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('ACCESS_TOKEN_LIFETIME', 5))),
 }
 
 SWAGGER_SETTINGS = {
@@ -180,12 +176,8 @@ SWAGGER_SETTINGS = {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header',
-            'description': 'Token format should be: Bearer <token>'
+            'description': 'Token format should be: Bearer <token>',
         }
     },
-    'SECURITY_REQUIREMENTS': [
-        {
-            'Bearer': []
-        }
-    ],
+    'SECURITY_REQUIREMENTS': [{'Bearer': []}],
 }

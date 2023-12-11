@@ -17,6 +17,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 class TokenObtainPairResponseSerializer(serializers.Serializer):
     """JWT tokens response schema"""
+
     access = serializers.CharField()
     refresh = serializers.CharField()
 
@@ -29,6 +30,7 @@ class TokenObtainPairResponseSerializer(serializers.Serializer):
 
 class TokenRefreshResponseSerializer(serializers.Serializer):
     """JWT tokens response schema"""
+
     access = serializers.CharField()
 
     def create(self, validated_data):

@@ -38,15 +38,19 @@ class RequestsLoggingMiddleware:
 
     def __call__(self, request):
         request_id = uuid.uuid4()
-        logger.info(msg={
-            'message': f'Internal {request.method} request to {request.path}.',
-            'json': self.__loads_data(request.body.decode()),
-            'request_id': request_id,
-        })
+        logger.info(
+            msg={
+                'message': f'Internal {request.method} request to {request.path}.',
+                'json': self.__loads_data(request.body.decode()),
+                'request_id': request_id,
+            }
+        )
         response = self.get_response(request)
-        logger.info(msg={
-            'message': f'Internal response from {request.path}.',
-            'json': self.__loads_data(response.content.decode()),
-            'request_id': request_id,
-        })
+        logger.info(
+            msg={
+                'message': f'Internal response from {request.path}.',
+                'json': self.__loads_data(response.content.decode()),
+                'request_id': request_id,
+            }
+        )
         return response
